@@ -6,9 +6,12 @@
 package Visao;
 
 import Controle.ClienteJpaController;
+import Controle.PedidoJpaController;
 import Controle.ProdutoJpaController;
 import Modelo.Cliente;
+import Modelo.Pedido;
 import Modelo.Produto;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,6 +21,7 @@ import javax.swing.JOptionPane;
 public class Principal extends javax.swing.JFrame {
 
     String emf = "TrabalhoFinalGerenciaConfigPU";
+    PedidoJpaController oPedidoJpaController = new PedidoJpaController(emf);
     ProdutoJpaController oProdutoJpaController = new ProdutoJpaController(emf);
     ClienteJpaController oClienteJpaController = new ClienteJpaController(emf);
 
@@ -49,6 +53,11 @@ public class Principal extends javax.swing.JFrame {
         jMIInclusao1 = new javax.swing.JMenuItem();
         jMIAlteracao1 = new javax.swing.JMenuItem();
         jMIExclusao1 = new javax.swing.JMenuItem();
+        jMPedido = new javax.swing.JMenu();
+        jMIConsulta2 = new javax.swing.JMenuItem();
+        jMIInclusao2 = new javax.swing.JMenuItem();
+        jMIAlteracao2 = new javax.swing.JMenuItem();
+        jMIExclusao2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,6 +143,42 @@ public class Principal extends javax.swing.JFrame {
         jMCliente.add(jMIExclusao1);
 
         jMenuBar1.add(jMCliente);
+
+        jMPedido.setText("Pedido");
+
+        jMIConsulta2.setText("Consulta");
+        jMIConsulta2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIConsulta2ActionPerformed(evt);
+            }
+        });
+        jMPedido.add(jMIConsulta2);
+
+        jMIInclusao2.setText("Inclusão");
+        jMIInclusao2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIInclusao2ActionPerformed(evt);
+            }
+        });
+        jMPedido.add(jMIInclusao2);
+
+        jMIAlteracao2.setText("Alteração");
+        jMIAlteracao2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIAlteracao2ActionPerformed(evt);
+            }
+        });
+        jMPedido.add(jMIAlteracao2);
+
+        jMIExclusao2.setText("Exclusão");
+        jMIExclusao2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIExclusao2ActionPerformed(evt);
+            }
+        });
+        jMPedido.add(jMIExclusao2);
+
+        jMenuBar1.add(jMPedido);
 
         setJMenuBar(jMenuBar1);
 
@@ -240,7 +285,7 @@ public class Principal extends javax.swing.JFrame {
         oCliente.setEstado(estado);
         oCliente.setCEP(cep);
         oClienteJpaController.create(oCliente);
-        JOptionPane.showMessageDialog(null, "Cliente Cadastrado com sucesso!");
+        JOptionPane.showMessageDialog(null, "Cliente " + oCliente.getId() + " Cadastrado com sucesso!");
     }//GEN-LAST:event_jMIInclusao1ActionPerformed
 
     private void jMIAlteracao1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIAlteracao1ActionPerformed
@@ -293,6 +338,76 @@ public class Principal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMIExclusao1ActionPerformed
 
+    private void jMIConsulta2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIConsulta2ActionPerformed
+        long id = Long.parseLong(JOptionPane.showInputDialog(null, "Insira o id do Pedido para Consulta"));
+        Pedido oPedido = oPedidoJpaController.findPedido(id);
+        if (oPedido != null) {
+            JOptionPane.showMessageDialog(null, "Pedido Encontrado!\n" + oPedido.toString());
+        } else {
+            JOptionPane.showMessageDialog(null, "Pedido não consta na base de dados!");
+        }
+    }//GEN-LAST:event_jMIConsulta2ActionPerformed
+
+    private void jMIInclusao2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIInclusao2ActionPerformed
+        Pedido oPedido = new Pedido();
+        Long idCliente = Long.parseLong(JOptionPane.showInputDialog(null, "Insisra o id do Cliente"));
+        Cliente oCliente = oClienteJpaController.findCliente(idCliente);
+        if (oCliente != null) {
+            boolean quero = true;
+            ArrayList<String> pedidos = new ArrayList<>();
+            double valorTotal = 0;
+            while (quero) {
+                Long idProduto = Long.parseLong(JOptionPane.showInputDialog(null, "Insisra o id do Produto"));
+                Produto oProduto = oProdutoJpaController.findProduto(idProduto);
+                if (oProduto != null) {
+                    int quantidade = Integer.parseInt(JOptionPane.showInputDialog(null, "Insisra a quantidade"));
+                    double precoUnitario = Double.parseDouble(JOptionPane.showInputDialog(null, "Insisra o valor unitário"));
+                    double desconto = Double.parseDouble(JOptionPane.showInputDialog(null, "Insisra o valor de desconto"));
+
+                    String pedido = oProduto.getDescricao() + "    Qtd: " + quantidade + "    Desc.: " + desconto + "    Pre.Unt.: " + precoUnitario;
+                    pedidos.add(pedido);
+                    valorTotal = valorTotal + ((precoUnitario * quantidade) - desconto);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Produto não consta na base de dados!");
+                }
+
+                String ver = JOptionPane.showInputDialog(null, "Deseja comprar outro Produto?"
+                        + "\n(S) para continuar ou (N) para finalizar");
+                if (ver.equalsIgnoreCase("n")) {
+                    quero = false;
+                }
+            }
+            oPedido.setIdCliente(idCliente);
+            oPedido.setPedidos(pedidos);
+            oPedido.setValorTotal(valorTotal);
+            oPedidoJpaController.create(oPedido);
+            JOptionPane.showMessageDialog(null, "Seu pedido:\n" + oPedido.toString());
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente não consta na base de dados!");
+
+        }
+
+    }//GEN-LAST:event_jMIInclusao2ActionPerformed
+
+    private void jMIAlteracao2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIAlteracao2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMIAlteracao2ActionPerformed
+
+    private void jMIExclusao2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIExclusao2ActionPerformed
+        long id = Long.parseLong(JOptionPane.showInputDialog(null, "Insira o id do Pedido para Exclusão"));
+        Pedido oPedido = oPedidoJpaController.findPedido(id);
+        if (oPedido != null) {
+            try {
+                oPedidoJpaController.destroy(id);
+                JOptionPane.showMessageDialog(null, "Pedido excluido com sucesso!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Pedido não consta na base de dados!");
+        }
+    }//GEN-LAST:event_jMIExclusao2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -332,12 +447,17 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMCliente;
     private javax.swing.JMenuItem jMIAlteracao;
     private javax.swing.JMenuItem jMIAlteracao1;
+    private javax.swing.JMenuItem jMIAlteracao2;
     private javax.swing.JMenuItem jMIConsulta;
     private javax.swing.JMenuItem jMIConsulta1;
+    private javax.swing.JMenuItem jMIConsulta2;
     private javax.swing.JMenuItem jMIExclusao;
     private javax.swing.JMenuItem jMIExclusao1;
+    private javax.swing.JMenuItem jMIExclusao2;
     private javax.swing.JMenuItem jMIInclusao;
     private javax.swing.JMenuItem jMIInclusao1;
+    private javax.swing.JMenuItem jMIInclusao2;
+    private javax.swing.JMenu jMPedido;
     private javax.swing.JMenu jMProduto;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;

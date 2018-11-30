@@ -4,6 +4,7 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>Modelo.Produto</class>
     <class>Modelo.Cliente</class>
+    <class>Modelo.Pedido</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
