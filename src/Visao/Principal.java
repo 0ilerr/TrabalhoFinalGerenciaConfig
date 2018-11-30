@@ -5,7 +5,9 @@
  */
 package Visao;
 
+import Controle.ClienteJpaController;
 import Controle.ProdutoJpaController;
+import Modelo.Cliente;
 import Modelo.Produto;
 import javax.swing.JOptionPane;
 
@@ -15,7 +17,9 @@ import javax.swing.JOptionPane;
  */
 public class Principal extends javax.swing.JFrame {
 
-    ProdutoJpaController oProdutoJpaController = new ProdutoJpaController("TrabalhoFinalGerenciaConfigPU");
+    String emf = "TrabalhoFinalGerenciaConfigPU";
+    ProdutoJpaController oProdutoJpaController = new ProdutoJpaController(emf);
+    ClienteJpaController oClienteJpaController = new ClienteJpaController(emf);
 
     /**
      * Creates new form Principal
@@ -40,7 +44,11 @@ public class Principal extends javax.swing.JFrame {
         jMIInclusao = new javax.swing.JMenuItem();
         jMIAlteracao = new javax.swing.JMenuItem();
         jMIExclusao = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
+        jMCliente = new javax.swing.JMenu();
+        jMIConsulta1 = new javax.swing.JMenuItem();
+        jMIInclusao1 = new javax.swing.JMenuItem();
+        jMIAlteracao1 = new javax.swing.JMenuItem();
+        jMIExclusao1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,8 +99,41 @@ public class Principal extends javax.swing.JFrame {
 
         jMenuBar1.add(jMProduto);
 
-        jMenu1.setText("jMenu1");
-        jMenuBar1.add(jMenu1);
+        jMCliente.setText("Cliente");
+
+        jMIConsulta1.setText("Consulta");
+        jMIConsulta1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIConsulta1ActionPerformed(evt);
+            }
+        });
+        jMCliente.add(jMIConsulta1);
+
+        jMIInclusao1.setText("Inclusão");
+        jMIInclusao1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIInclusao1ActionPerformed(evt);
+            }
+        });
+        jMCliente.add(jMIInclusao1);
+
+        jMIAlteracao1.setText("Alteração");
+        jMIAlteracao1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIAlteracao1ActionPerformed(evt);
+            }
+        });
+        jMCliente.add(jMIAlteracao1);
+
+        jMIExclusao1.setText("Exclusão");
+        jMIExclusao1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIExclusao1ActionPerformed(evt);
+            }
+        });
+        jMCliente.add(jMIExclusao1);
+
+        jMenuBar1.add(jMCliente);
 
         setJMenuBar(jMenuBar1);
 
@@ -170,6 +211,88 @@ public class Principal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMIExclusaoActionPerformed
 
+    private void jMIConsulta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIConsulta1ActionPerformed
+        long id = Long.parseLong(JOptionPane.showInputDialog(null, "Insira o id do Cliente para Consulta"));
+        Cliente oCliente = oClienteJpaController.findCliente(id);
+        if (oCliente != null) {
+            JOptionPane.showMessageDialog(null, "Cliente Encontrado!\n" + oCliente.toString());
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente não consta na base de dados!");
+        }
+    }//GEN-LAST:event_jMIConsulta1ActionPerformed
+
+    private void jMIInclusao1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIInclusao1ActionPerformed
+        Cliente oCliente = new Cliente();
+        String nome = JOptionPane.showInputDialog(null, "Insira o nome do Cliente");
+        String cpf = JOptionPane.showInputDialog(null, "Insira o CPF do Cliente");
+        String logradouro = JOptionPane.showInputDialog(null, "Insira o Logradouro do Cliente");
+        String numero = JOptionPane.showInputDialog(null, "Insira o Número do Cliente");
+        String bairro = JOptionPane.showInputDialog(null, "Insira o Bairro do Cliente");
+        String cidade = JOptionPane.showInputDialog(null, "Insira a Cidade do Cliente");
+        String estado = JOptionPane.showInputDialog(null, "Insira o Estado do Cliente");
+        String cep = JOptionPane.showInputDialog(null, "Insira o CEP do Cliente");
+        oCliente.setNome(nome);
+        oCliente.setCPF(cpf);
+        oCliente.setLogradouro(logradouro);
+        oCliente.setNumero(numero);
+        oCliente.setBairro(bairro);
+        oCliente.setCidade(cidade);
+        oCliente.setEstado(estado);
+        oCliente.setCEP(cep);
+        oClienteJpaController.create(oCliente);
+        JOptionPane.showMessageDialog(null, "Cliente Cadastrado com sucesso!");
+    }//GEN-LAST:event_jMIInclusao1ActionPerformed
+
+    private void jMIAlteracao1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIAlteracao1ActionPerformed
+        long id = Long.parseLong(JOptionPane.showInputDialog(null, "Insira o id do Cliente para Alterar"));
+        Cliente oCliente = oClienteJpaController.findCliente(id);
+        if (oCliente != null) {
+            String nome = JOptionPane.showInputDialog(null, "Insira o novo nome do Cliente");
+            String cpf = JOptionPane.showInputDialog(null, "Insira o novo CPF do Cliente");
+            String logradouro = JOptionPane.showInputDialog(null, "Insira o novo Logradouro do Cliente");
+            String numero = JOptionPane.showInputDialog(null, "Insira o novo Número do Cliente");
+            String bairro = JOptionPane.showInputDialog(null, "Insira o novo Bairro do Cliente");
+            String cidade = JOptionPane.showInputDialog(null, "Insira a nova Cidade do Cliente");
+            String estado = JOptionPane.showInputDialog(null, "Insira o novo Estado do Cliente");
+            String cep = JOptionPane.showInputDialog(null, "Insira o novo CEP do Cliente");
+
+            oCliente.setNome(nome);
+            oCliente.setCPF(cpf);
+            oCliente.setLogradouro(logradouro);
+            oCliente.setNumero(numero);
+            oCliente.setBairro(bairro);
+            oCliente.setCidade(cidade);
+            oCliente.setEstado(estado);
+            oCliente.setCEP(cep);
+
+            try {
+                oClienteJpaController.edit(oCliente);
+                JOptionPane.showMessageDialog(null, "Cliente Alterado com Sucesso!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente não consta na base de dados!");
+        }
+
+    }//GEN-LAST:event_jMIAlteracao1ActionPerformed
+
+    private void jMIExclusao1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIExclusao1ActionPerformed
+        long id = Long.parseLong(JOptionPane.showInputDialog(null, "Insira o id do seu Cliente para Exclusão:"));
+        Cliente oCliente = oClienteJpaController.findCliente(id);
+        if (oCliente != null) {
+            try {
+                oClienteJpaController.destroy(id);
+                JOptionPane.showMessageDialog(null, "Cliente Excluido!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente não consta na base de dados!");
+        }
+
+    }//GEN-LAST:event_jMIExclusao1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -206,12 +329,16 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMCliente;
     private javax.swing.JMenuItem jMIAlteracao;
+    private javax.swing.JMenuItem jMIAlteracao1;
     private javax.swing.JMenuItem jMIConsulta;
+    private javax.swing.JMenuItem jMIConsulta1;
     private javax.swing.JMenuItem jMIExclusao;
+    private javax.swing.JMenuItem jMIExclusao1;
     private javax.swing.JMenuItem jMIInclusao;
+    private javax.swing.JMenuItem jMIInclusao1;
     private javax.swing.JMenu jMProduto;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
