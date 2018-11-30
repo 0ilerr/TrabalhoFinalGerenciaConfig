@@ -7,32 +7,70 @@ package Modelo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author euler
  */
 @Entity
+@Table(name="pedidos")
 public class Pedido implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    
+    @Column(name="idCliente")
     private Long idCliente;
-    ArrayList<String> pedidos = new ArrayList<>();
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="id_produtos")
+    private List<Produto> produtos = new ArrayList<Produto>();
+    
+    @Column(name="valorTotal")
     private double valorTotal;
 
-    public ArrayList<String> getPedidos() {
-        return pedidos;
+   
+    public void addProduto(Produto p){
+        this.produtos.add(p);
+        atualizaValorTotal();
+    }
+    public void removeProduto(Produto p){
+        this.produtos.remove(p);
+        atualizaValorTotal();
     }
 
-    public void setPedidos(ArrayList<String> pedidos) {
-        this.pedidos = pedidos;
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(ArrayList<Produto> produtos) {
+        this.produtos = produtos;
+    }
+    
+    
+    public void  atualizaValorTotal(){
+        double valor = 0.0;
+        for(int i = 0; i < this.produtos.size(); i++ ){
+           Produto p = produtos.get(i);
+           valor = valor + p.getValor();
+        }
+        setValorTotal(valor);
     }
 
     public Long getIdCliente() {
@@ -77,19 +115,6 @@ public class Pedido implements Serializable {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public String toString() {
-        String produtos = "";
-        for (String pedido : pedidos) {
-            produtos += pedido.toString()+"\n";
-        }
-        return "Nota = " + id
-                + "\nIdCliente = " + idCliente
-                + "\nProdutos:\n"
-                + produtos
-                + "\nValor Total = " + valorTotal;
     }
 
 }

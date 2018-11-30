@@ -200,8 +200,12 @@ public class Principal extends javax.swing.JFrame {
         Produto oProduto = new Produto();
         String descricao = JOptionPane.showInputDialog(null, "Informe o nome do Produto:");
         String fabricante = JOptionPane.showInputDialog(null, "Informe o nome do fabricante do Produto:");
+        double valor = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor do fabricante do Produto:"));
+        
         oProduto.setDescricao(descricao);
         oProduto.setFabricante(fabricante);
+        oProduto.setValor(valor);
+        
         oProdutoJpaController.create(oProduto);
         JOptionPane.showMessageDialog(null, "Sucesso ao Cadastrar!\n"
                 + oProduto.toString());
@@ -225,8 +229,10 @@ public class Principal extends javax.swing.JFrame {
         if (oProduto != null) {
             String descricao = JOptionPane.showInputDialog(null, "Insira a nova descrição:");
             String fabricante = JOptionPane.showInputDialog(null, "Insira o novo fabricante:");
+            double valor = Double.parseDouble(JOptionPane.showInputDialog(null, " Insira o novo  valor:"));
             oProduto.setDescricao(descricao);
             oProduto.setFabricante(fabricante);
+            oProduto.setValor(valor);
             try {
                 oProdutoJpaController.edit(oProduto);
                 JOptionPane.showMessageDialog(null, "Alteração feita com sucesso!");
@@ -378,7 +384,7 @@ public class Principal extends javax.swing.JFrame {
                 }
             }
             oPedido.setIdCliente(idCliente);
-            oPedido.setPedidos(pedidos);
+            
             oPedido.setValorTotal(valorTotal);
             oPedidoJpaController.create(oPedido);
             JOptionPane.showMessageDialog(null, "Seu pedido:\n" + oPedido.toString());
@@ -390,7 +396,23 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMIInclusao2ActionPerformed
 
     private void jMIAlteracao2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIAlteracao2ActionPerformed
-        // TODO add your handling code here:
+        Pedido oPedido = null;
+            
+            long id = Long.parseLong(JOptionPane.showInputDialog(null, "Insira o id do Pedido para Consulta"));
+            oPedido = oPedidoJpaController.findPedido(id);
+            if (oPedido != null) {
+                JOptionPane.showMessageDialog(null, "Pedido Encontrado!\n" + oPedido.toString());
+                TelaPedido tp = new TelaPedido();
+                tp.setVisible(true);
+                tp.setaCampos(oPedido);
+            } else {
+                JOptionPane.showMessageDialog(null, "Pedido não consta na base de dados!");
+            }
+            
+            
+         
+            
+
     }//GEN-LAST:event_jMIAlteracao2ActionPerformed
 
     private void jMIExclusao2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIExclusao2ActionPerformed

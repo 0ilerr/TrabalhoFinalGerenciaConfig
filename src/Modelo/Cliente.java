@@ -6,24 +6,41 @@
 package Modelo;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author euler
  */
 @Entity
+@Table(name="clientes")  
 public class Cliente implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+   
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String nome, CPF, logradouro, numero, bairro,
-            cidade, CEP, estado;
+    @Column(name="nome")
+    private String nome;
+    @Column(name="cfp")
+    private String CPF;
+    @Column(name="logradouro")
+    private String logradouro;
+    @Column(name="numero")
+    private String numero;
+    @Column(name="bairro")
+    private String bairro;
+    @Column(name="cidade")
+    private String cidade;
+    @Column(name="cep")
+    private String CEP;
+    @Column(name="estado")
+    private String estado;
 
     public String getNome() {
         return nome;

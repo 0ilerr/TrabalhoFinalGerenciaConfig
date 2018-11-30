@@ -6,23 +6,48 @@
 package Modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author euler
  */
 @Entity
+@Table(name="produtos")
 public class Produto implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
-    private String descricao, fabricante;
+    
+    @Column(name="descricao")
+    private String descricao;
+    @Column(name="fabricante")
+    private String fabricante;
+    @Column(name="valor")
+    private double valor;
+
+    public double getValor() {
+        return valor;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+    
+    
 
     public String getDescricao() {
         return descricao;
